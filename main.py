@@ -73,7 +73,7 @@ def get_capm(code, cdi):
     # vamos criar um data frame novo com os dados de retorno em log... sabemos que em log é o melhor jeito se for
     # ativos individuais
     df_log = np.log(mdata / mdata.shift(1))
-    print(df_log.head())
+    # print(df_log.head())
 
     # vamos cria uma matriz de covariancai com o metodo (.cov)
     cov = df_log.cov() * 250
@@ -93,8 +93,24 @@ def get_capm(code, cdi):
 
     retorno_esp_min = cdi + beta_acao * 0.08
     retorno_esp_min = str(round(retorno_esp_min, 5) * 100) + '%'
+    dicionario = {"codigo": code, "beta": beta_acao, "alpha_de_jensen": alpha_jensen, "retorno_esp_min": retorno_esp_min}
+    return dicionario
 
-    return beta_acao, alpha_jensen, retorno_esp_min
+
+def analise(dicionario):
+    alfas = []
+    for k in dicionario:
+        for n, j in k.items():
+            if n == 'alpha_de_jensen':
+                alfas.append(j)
+    maior = max(alfas)
+    print(maior)
+    for k in dicionario:
+        if k["alpha_de_jensen"] == maior:
+            return k
+
+
+
 
 
 cdi = get_cdi()
@@ -108,4 +124,6 @@ for i in codes:
     except RemoteDataError:
         print(f"the following stock couldn't be fetched: {i}")
 
-print(capm_values)
+melhor_opcao = analise(capm_values)
+
+print(melhor_opcao)
