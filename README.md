@@ -1,1 +1,1 @@
-# desafio_crawler
+## Script para análise do setor de varejo da bovespa com base no modelo capm
